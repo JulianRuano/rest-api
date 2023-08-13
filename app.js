@@ -1,11 +1,15 @@
-const express = require('express')
-const app = express()
-const crypto = require('node:crypto')
+import express, { json } from 'express'
+import { randomUUID } from 'node:crypto'
+import cors from 'cors'
+import { validateMovie, validatePartialMovie } from './schemas/movies.js'
+// import movies from './movies.json'
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
 const movies = require('./movies.json')
-const cors = require('cors')
-const { validateMovie, validatePartialMovie } = require('./shemas/movies')
 
-app.use(express.json())
+const app = express()
+
+app.use(json())
 app.disable('x-powered-by')
 app.use(cors({
   origin: (origin, callback) => {
@@ -20,7 +24,6 @@ app.use(cors({
 
     return callback(new Error('Not allowed by CORS'))
   }
-
 }))
 
 app.get('/', (req, res) => {
@@ -65,7 +68,7 @@ app.post('/movies', (req, res) => {
   }
 
   const newMovie = {
-    id: crypto.randomUUID(), // genera un id aleatorio
+    id: randomUUID(), // genera un id aleatorio
     ...result.data
   }
 
@@ -100,7 +103,7 @@ app.patch('/movies/:id', (req, res) => {
 const PORT = process.env.PORT ?? 5001
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port http://localhost:${PORT} `)
 })
 
 // configuración para que el servidor escuche en una dirección IP específica
