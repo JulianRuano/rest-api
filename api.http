@@ -1,0 +1,35 @@
+### Recuperar todas las  peliculas
+GET http://localhost:5001/movies
+
+### Recuperar una pelicula por id
+GET http://localhost:5001/movies/c8a7d63f-3b04-44d3-9d95-8782fd7dcfaf
+
+### Recuperar todas las peliculas de un genero
+GET http://localhost:5001/movies?genre=Action
+
+### Crear una pelicula con post
+POST http://localhost:5001/movies
+Content-Type: application/json
+
+{
+  "title": "probando2",
+  "year": 2008,
+  "director": "Christopher Nolan",
+  "duration": 152,
+  "poster": "https://i.ebayimg.com/images/g/yokAAOSw8w1YARbm/s-l1200.jpg",
+  "genre": ["Action", "Crime", "Drama"],
+  "rate": 9.0,
+  // No se cae si se envia un campo que no existe y lo ignora
+  "sql": "SELECT * FROM movies WHERE id = 1"
+}
+
+### Actualizar una pelicula 
+PATCH http://localhost:5000/movies/c8a7d63f-3b04-44d3-9d95-8782fd7dcfaf
+Content-Type: application/json
+
+{
+// Se puede cambiar todo lo que se esta validando
+// pero el id como no se esta validadno no se puede cambiar
+  "id": 123, //lo ignora 
+  "year": 2015
+}

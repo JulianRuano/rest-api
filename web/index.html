@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuevana4</title>
+    <style>
+        body {
+            background-color: #080f28d4;
+        }
+        main {
+            display: flex;
+            flex-wrap: wrap;                   
+            justify-content: center;          
+        }
+        article {
+            width: 150;
+            margin: 5px;
+            border: 1px solid #312c2c;
+            padding: 5px;
+            text-align: center;
+            font-size: 6px;
+            color: aliceblue;  
+            display: flex;
+            flex-direction: column;         
+        }
+        img {         
+            height: 140px;
+            width: 100px;
+        }
+        button {
+            background-color: #080f28d4;
+            color: aliceblue;
+            border: 1px solid #312c2c;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 6px;         
+        }
+        button:hover {
+            background-color: #312c2c;
+            color: aliceblue;
+            border: 1px solid #312c2c;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 6px;         
+        }
+        
+    </style>
+     <script type="module">
+        fetch('http://localhost:5001/movies')
+            .then(response => response.json())
+            .then(movies => {
+                const html = movies.map(movie => {
+                    return `
+                        <article data-id="${movie.id}">
+                            <p>${movie.title}</p>
+                            <img src="${movie.poster}" alt="${movie.title}">
+                            <button>Eliminar</button>
+                        </article>
+                    `
+                }).join('')
+
+                document.querySelector('main').innerHTML = html
+                document.addEventListener('click', e => {
+                    if (e.target.matches('button')) {
+                        const article = e.target.closest('article')
+                        const id = article.dataset.id
+                        fetch(`http://localhost:5001/movies/${id}`, {
+                            method: 'DELETE'
+                        })
+                            .then(res => {
+                                if(res.ok){
+                                    article.remove()
+                                }                              
+                            })
+                    }
+                })
+        })          
+    </script>
+</head>
+<body>
+    <main></main>
+</body>
+</html>
