@@ -1,11 +1,10 @@
-import { MovieModel } from '../models/movie'
-import { validateMovie, validatePartialMovie } from '../schemas/movies'
+import { MovieModel } from '../models/localStorage/movie.js'
+import { validateMovie, validatePartialMovie } from '../schemas/movies.js'
 
 export class MoviesController {
   static async getAll (req, res) {
     const { genre } = req.query
     const movies = await MovieModel.getAll({ genre })
-    // que es lo que renderiza
     res.json(movies)
   }
 
@@ -21,8 +20,9 @@ export class MoviesController {
     if (!result.success) {
       return res.status(400).json({ errors: JSON.parse(result.error.message) })
     }
-    const { title, releaseDate, length, actors, genre } = result.data
-    const movie = await MovieModel.create({ title, releaseDate, length, actors, genre })
+
+    const movie = await MovieModel.create({ input: result.data })
+
     res.status(201).json(movie)
   }
 
